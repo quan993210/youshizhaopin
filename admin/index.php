@@ -51,7 +51,7 @@ function menu()
 
 	$sub[]  = array('url' => 'log.php', 				    'name' => '日志管理');
 	$sub[]  = array('url' => 'admin.php', 				'name' => '管理员管理');
-	$sub[]  = array('url' => 'school.php', 				'name' => '幼师机构管理');
+	$sub[]  = array('url' => 'school.php', 				'name' => '幼教机构管理');
 	$sub[]  = array('url' => 'user.php', 				'name' => '幼师会员管理');
 	$sub[]  = array('url' => 'position_info.php',    	'name' => '岗位招聘管理');
 	$sub[]  = array('url' => 'job_flash.php',       	'name' => '快速找工作管理');

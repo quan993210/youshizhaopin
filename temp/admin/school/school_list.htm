@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{$page_title}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="{$admin_temp_path}/css/general.css" rel="stylesheet" type="text/css" />
+	<link href="{$admin_temp_path}/css/main.css" rel="stylesheet" type="text/css" />
+	<script src="{$url_path}/js/jquery.js"></script>
+	<script src="{$url_path}/js/utils.js"></script>
+	<script src="{$admin_temp_path}/js/listtable.js"></script>
+	{literal}
+	<script>
+		function check()
+		{
+			if(confirm("您确认删除这些吗？"))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		function check_del(url)
+		{
+			if(confirm("您是否确认删除该用户！"))
+			{
+				location.href = url;
+			}
+
+
+			return;
+		}
+	</script>
+	{/literal}
+</head>
+<h1>
+	<span class="action-span"><a href="school.php?action=add_school">添加机构</a></span>
+	<span class="action-span1"><a href="">{$sys_name} 管理中心</a>  - {$page_title} </span>
+	<div style="clear:both"></div>
+</h1>
+<body>
+<div class="form-div">
+	<form action="school.php" name="searchForm" onsubmit="">
+		<img src="{$admin_temp_path}/images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+		关键字 <input type="text" placeholder="请输入幼教机构名称" name="keyword" id="keyword" value="{$keyword}"/>
+		<input type="submit" value="搜索" class="button" />
+	</form>
+</div>
+<form method="post" action="school.php?action=del_sel_school" name="listForm" onsubmit="return check()">
+	<div class="list-div" id="listDiv">
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="1">
+			<tr align="center">
+				<th width="5%"><input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" name="checkbox[]">编号</th>
+				<th width="5%">LOGO</td>
+				<th width="10%">机构名称</td>
+				<th width="5%">分类</td>
+				<th width="10%">联系电话</td>
+				<th width="15%">地址</td>
+				<th width="15%">所在地区</td>
+				<th width="5%">在招职位</td>
+				<th width="15%">添加时间</td>
+				<th width="15%">操作</td>
+			</tr>
+			{section name=loop loop=$school_list}
+			<tr align="center">
+				<td><span><input name="checkboxes[]" type="checkbox" value="{$school_list[loop].id}" />{$school_list[loop].id}</span></td>
+				<td><img src="{if $school_list[loop].logo neq ''}{$school_list[loop].logo}{else}{$url_path}/temp/admin/images/default.png{/if}" style="width: 50px;height: 50px;border-radius:50%; overflow:hidden;" /></td>
+				<td>{$school_list[loop].name}</td>
+				<td>{if $school_list[loop].type eq 1}幼儿园{else}早教{/if}</td>
+				<td>{$school_list[loop].mobile}</td>
+				<td>{$school_list[loop].address}</td>
+				<td>{$school_list[loop].region}</td>
+				<td>{$school_list[loop].count_released}</td>
+				<td>{$school_list[loop].add_time_format}</td>
+				<td>
+					<a href="school.php?action=mod_school&userid={$school_list[loop].userid}&now_page={$now_page}">修改</a> |
+					<a href="javascript:void(0);" onclick="check_del('school.php?action=del_school&userid={$school_list[loop].userid}&nowpage={$nowpage}');">删除</a>
+				</td>
+			</tr>
+			{/section}
+			<tr>
+				<td>
+					<input type="submit" value="批量删除" id="btnSubmit" name="btnSubmit" class="button" disabled="true" />
+					<input type="hidden" value="{$now_page}" name="now_page"/>
+					<input type="hidden" value="{$admin_temp_path}" id="admin_temp_path"/>
+				</td>
+				<td colspan="10" align="right">&nbsp;&nbsp;&nbsp;&nbsp;{$pageshow}</td>
+			</tr>
+		</table>
+	</div>
+</form>
+</body>
+</html>
+<script language="JavaScript" src="{$admin_temp_path}/js/select.js"></script>
