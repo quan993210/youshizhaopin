@@ -49,6 +49,5 @@ function ajax_html(regionid,region_code){
             }
             $("#county").html(html);
         }
-
     });
 }
