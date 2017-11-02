@@ -9,7 +9,6 @@
 set_include_path(dirname(dirname(__FILE__)));
 include_once("inc/init.php");
 if (!session_id()) session_start();
-
 $action = crequest("action");
 $action = $action == '' ? 'list' : $action;
 
@@ -50,6 +49,7 @@ switch ($action)
 function school_list()
 {
 	global $db, $smarty;
+
 	//搜索条件
 	$con = "WHERE is_delete=0";
 	$keyword 	= crequest('keyword');
@@ -98,24 +98,49 @@ function add_school()
 function do_add_school()
 {
 	global $db, $smarty;
+	$data=array();
+	$data['admin_user_name']    	= crequest('admin_user_name');
+	$data['password']   = crequest('password');
+	$data['logo']   	= crequest('logo');
+	$data['name']   = crequest('name');
+	$data['mobile']    	= crequest('mobile');
+	$data['type']   = crequest('type');
+	$data['address']    	= crequest('address');
+	$data['regionid']   = crequest('regionid');
+	$data['region']    	= crequest('region');
+	$data['introduction']   = crequest('introduction');
+	$image[]   = crequest('image1');
+	$image[]   = crequest('image2');
+	$image[]   = crequest('image3');
+	$image[]   = crequest('image4');
+	$image[]   = crequest('image5');
+	$image[]   = crequest('image6');
+	$image[]   = crequest('image7');
+	$image[]   = crequest('image8');
+	$image[]   = crequest('image9');
+	$data['albums'] = implode(',',$image);
+	$data['cityid'] = 1;
+	$data['city_name'] = "南昌";
+	$data['add_time'] = time();
+	$data['add_time_format'] = now_time();
 
-	$name    	= crequest('name');
-	$mobile   = crequest('mobile');
-	$add_time	= time();
-	$add_time_format	= now_time();
+	check_null($data['admin_user_name']  	,   '登录账号');
+	check_null($data['password']  	,   '登录密码');
+	check_null($data['name']  	,   '机构名称');
+	check_null($data['mobile']  	,   '联系电话');
+	include_once("admin/init.php");
 
-	check_null($name  	,   '用户名');
-	check_null($mobile  	,   '手机号');
-	$sql = "SELECT * FROM school WHERE mobile = '{$mobile}'";
+
+
+	$sql = "SELECT * FROM school WHERE admin_user_name = '{$data['admin_user_name']}'";
 	$school = $db->get_row($sql);
 	if($school){
-		alert_back('系统已存在该手机号，请勿重复添加！');
+		alert_back('系统已存在该账号，请勿重复添加！');
 	}
 
-	$sql = "INSERT INTO school (name, mobile, add_time, add_time_format) VALUES ('{$name}', '{$mobile}', '{$add_time}', '{$add_time_format}')";
-	$db->query($sql);
+	$id = $db->insert('school',$data);
 	$aid  = $_SESSION['admin_id'];
-	$text = '添加用户，添加用户ID：' . $db->link_id->insert_id;
+	$text = '添加用户，添加用户ID：' . $id;
 	operate_log($aid, 'school', 1, $text);
 
 	$url_to = "school.php?action=list";
@@ -148,17 +173,8 @@ function do_mod_school()
 {
 	global $db;
 
-	$userid 	  	= irequest('userid');
-	$name    	= crequest('name');
-	$mobile   = crequest('mobile');
+	$id 	  	= irequest('id');
 
-	check_null($name  	,   '用户名');
-	check_null($mobile  	,   '手机号');
-	$sql = "SELECT * FROM school WHERE mobile = '{$mobile}'";
-	$school = $db->get_row($sql);
-	if($school['userid'] != $userid){
-		alert_back('系统已存在该手机号，请勿重复添加！');
-	}
 
 	$sql = "UPDATE school SET "
 			. "name = '{$name}', "
