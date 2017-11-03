@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>{$page_title}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="{$admin_temp_path}/css/general.css" rel="stylesheet" type="text/css" />
+    <link href="{$admin_temp_path}/css/main.css" rel="stylesheet" type="text/css" />
+    <script src="{$url_path}/js/jquery.js"></script>
+</head>
+<body>
+<h1>
+    <span class="action-span"><a href="javascript:history.back();">返回</a></span>
+    <span class="action-span1"><a href="">{$sys_name} 管理中心</a>  - {$page_title} </span>
+    <div style="clear:both"></div>
+</h1>
+<div id="tabbody-div">
+    <form name="form" action="" method="post" enctype="multipart/form-data">
+        <table width="98%" border="0" align="center" cellpadding="0" cellspacing="1">
+            <tr>
+                <td class="label">幼教机构导入excel</td>
+                <td><input  type="file" name="school" required="required"/></td>
+            </tr>
+            <tr>
+                <td class="label">  <a href="/upload/excel/幼师机构模板.xlsx">下载Excel模板</a></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="hidden" name="action" value="{$action}" />
+                    <input type="submit" value="确定">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

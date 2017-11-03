@@ -41,6 +41,10 @@ switch ($action)
 	case "region";
 		region();
 		break;
+	case "import_school";
+		import_school();
+		break;
+
 }
 
 /*------------------------------------------------------ */
@@ -86,7 +90,6 @@ function school_list()
 function add_school()
 {
 	global $smarty;
-
 	$smarty->assign('action', 'do_add_school');
 	$smarty->assign('page_title', '添加幼教机构');
 	$smarty->display('school/school.htm');
@@ -113,6 +116,7 @@ function do_add_school()
 	$data['city_name'] = "南昌";
 	$data['add_time'] = time();
 	$data['add_time_format'] = now_time();
+	$data['password'] = md5($data['password']);
 
 	check_null($data['admin_user_name']  	,   '登录账号');
 	check_null($data['password']  	,   '登录密码');
@@ -126,12 +130,18 @@ function do_add_school()
 	}
 
 	$id = $db->insert('school',$data);
-	$aid  = $_SESSION['admin_id'];
-	$text = '添加幼教机构，添加幼教机构ID：' . $id;
-	operate_log($aid, 'school', 1, $text);
+	if($id){
+		$aid  = $_SESSION['admin_id'];
+		$text = '添加幼教机构，添加幼教机构ID：' . $id;
+		operate_log($aid, 'school', 1, $text);
 
-	$url_to = "school.php?action=list";
-	url_locate($url_to, '添加成功');
+		$url_to = "school.php?action=list";
+		url_locate($url_to, '添加成功');
+	}else{
+		$url_to = "school.php?action=list";
+		url_locate($url_to, '添加失败');
+	}
+
 }
 
 /*------------------------------------------------------ */
@@ -143,6 +153,7 @@ function mod_school()
 	$id = irequest('id');
 	$sql = "SELECT * FROM school WHERE id = '{$id}' and is_delete =0";
 	$school = $db->get_row($sql);
+	$school['albums'] = explode(',',$school['albums']);
 	$smarty->assign('school', $school);
 	$smarty->assign('url_path', URL_PATH);
 
@@ -171,7 +182,7 @@ function do_mod_school()
 	$image[]   = crequest('image8');
 	$image[]   = crequest('image9');
 	$data['albums'] = implode(',',$image);
-
+	$data['password'] = md5($data['password']);
 	check_null($data['admin_user_name']  	,   '登录账号');
 	check_null($data['password']  	,   '登录密码');
 	check_null($data['name']  	,   '机构名称');
@@ -180,7 +191,7 @@ function do_mod_school()
 
 	$sql = "SELECT * FROM school WHERE admin_user_name = '{$data['admin_user_name']}' and is_delete=0";
 	$school = $db->get_row($sql);
-	if($school['id'] != $id){
+	if($school && $school['id'] != $id){
 		alert_back('系统已存在该账号！');
 	}
 	$db->update('school',$data,"id=$id");
@@ -236,21 +247,25 @@ function del_sel_school()
 
 function import_school()
 {
-	global $db;
-	$exten = explode('.', $_FILES['school']['name']);
-	if($exten[1] !='xls' && $exten[1] !='xlsx'){
-		alert_back('请按模板导入EXCEL文件');
+	global $db,$smarty;
+	if($_FILES){
+		$exten = explode('.', $_FILES['school']['name']);
+		if($exten[1] !='xls' && $exten[1] !='xlsx'){
+			alert_back('请按模板导入EXCEL文件');
+		}
+		//接收前台文件，
+		$filename = $_FILES['school']['name'];
+		$tmp_name = $_FILES['school']['tmp_name'];
+		$data = uploadFile($filename, $tmp_name);
+		import_school_data($data);
+
+		$url_to = "school.php?action=list";
+		url_locate($url_to, '导入成功');
+	}else{
+		$smarty->assign('action', 'import_school');
+		$smarty->assign('page_title', '导入幼教机构');
+		$smarty->display('school/import_school.htm');
 	}
-
-	//接收前台文件，
-	$filename = $_FILES['school']['name'];
-	$tmp_name = $_FILES['school']['tmp_name'];
-	$data = uploadFile($filename, $tmp_name);
-	import_school_data($data);
-
-	$url_to = "dangfei.php?action=list";
-	url_locate($url_to, '添加成功');
-
 }
 
 //导入Excel文件
@@ -286,16 +301,26 @@ function import_school_data($data){
 	global $db;
 	$one = $data[0];unset($data[0]);
 	foreach($data as $key=>$val){
-		$val[]['cityid'] = 1;
-		$val[]['city_name'] = "南昌";
-		$val[]['add_time'] = time();
-		$val[]['add_time_format'] = now_time();
+		$school['admin_user_name'] = $val[0];
+		$school['password'] = md5($val[1]);
+		$school['name'] = $val[2];
+		$school['mobile'] = $val[3];
+		$sql = "SELECT * FROM areas WHERE name = '{$val[4]}'";
+		$region =   $db->get_row($sql);
+		$school['region'] = $region['joinname'];
+		$school['regionid'] = $region['areaid'];
+		$school['address'] = $val[5];
+		$school['introduction'] = $val[6];
+		$schooll['cityid'] = 1;
+		$school['city_name'] = "南昌";
+		$school['add_time'] = time();
+		$school['add_time_format'] = now_time();
 		$sql = "SELECT * FROM school WHERE admin_user_name = '{$val[0]}' and is_delete = 0";
-		$school = $db->get_row($sql);
-		if($school){
-			url_locate('school.php?action=list', '第'.$key.'行幼师机构已存在');
+		$info = $db->get_row($sql);
+		if($info){
+			url_locate('school.php?action=list', '第'.$key.'行幼师机构登录账号已存在');
 		}
-		$row = $db->insert('school',$val);
+		$row = $db->insert('school',$school);
 		if(!$row){
 			url_locate('school.php?action=list', '第'.$key.'行导入错误');
 		}
