@@ -58,7 +58,7 @@ function school_list()
 	}
 	$smarty->assign('keyword'    ,   $keyword);
 
-	$order 	 	= 'ORDER BY listorder DESC ,userid DESC';
+	$order 	 	= 'ORDER BY listorder DESC ,id DESC';
 
 	//列表信息
 	$now_page 	= irequest('page');
@@ -98,17 +98,7 @@ function add_school()
 function do_add_school()
 {
 	global $db, $smarty;
-	$data=array();
-	$data['admin_user_name']    	= crequest('admin_user_name');
-	$data['password']   = crequest('password');
-	$data['logo']   	= crequest('logo');
-	$data['name']   = crequest('name');
-	$data['mobile']    	= crequest('mobile');
-	$data['type']   = crequest('type');
-	$data['address']    	= crequest('address');
-	$data['regionid']   = crequest('regionid');
-	$data['region']    	= crequest('region');
-	$data['introduction']   = crequest('introduction');
+	$data=$_POST['info'];
 	$image[]   = crequest('image1');
 	$image[]   = crequest('image2');
 	$image[]   = crequest('image3');
@@ -128,11 +118,8 @@ function do_add_school()
 	check_null($data['password']  	,   '登录密码');
 	check_null($data['name']  	,   '机构名称');
 	check_null($data['mobile']  	,   '联系电话');
-	include_once("admin/init.php");
 
-
-
-	$sql = "SELECT * FROM school WHERE admin_user_name = '{$data['admin_user_name']}'";
+	$sql = "SELECT * FROM school WHERE admin_user_name = '{$data['admin_user_name']}' and is_delete=0";
 	$school = $db->get_row($sql);
 	if($school){
 		alert_back('系统已存在该账号，请勿重复添加！');
@@ -140,7 +127,7 @@ function do_add_school()
 
 	$id = $db->insert('school',$data);
 	$aid  = $_SESSION['admin_id'];
-	$text = '添加用户，添加用户ID：' . $id;
+	$text = '添加幼教机构，添加幼教机构ID：' . $id;
 	operate_log($aid, 'school', 1, $text);
 
 	$url_to = "school.php?action=list";
@@ -153,16 +140,15 @@ function do_add_school()
 function mod_school()
 {
 	global $db, $smarty;
-
-	$userid = irequest('userid');
-	$sql = "SELECT * FROM school WHERE userid = '{$userid}'";
+	$id = irequest('id');
+	$sql = "SELECT * FROM school WHERE id = '{$id}' and is_delete =0";
 	$school = $db->get_row($sql);
 	$smarty->assign('school', $school);
 	$smarty->assign('url_path', URL_PATH);
 
 	$smarty->assign('now_page', irequest('now_page'));
 	$smarty->assign('action', 'do_mod_school');
-	$smarty->assign('page_title', '修改用户');
+	$smarty->assign('page_title', '修改');
 	$smarty->display('school/school.htm');
 }
 
@@ -174,18 +160,33 @@ function do_mod_school()
 	global $db;
 
 	$id 	  	= irequest('id');
+	$data=$_POST['info'];
+	$image[]   = crequest('image1');
+	$image[]   = crequest('image2');
+	$image[]   = crequest('image3');
+	$image[]   = crequest('image4');
+	$image[]   = crequest('image5');
+	$image[]   = crequest('image6');
+	$image[]   = crequest('image7');
+	$image[]   = crequest('image8');
+	$image[]   = crequest('image9');
+	$data['albums'] = implode(',',$image);
+
+	check_null($data['admin_user_name']  	,   '登录账号');
+	check_null($data['password']  	,   '登录密码');
+	check_null($data['name']  	,   '机构名称');
+	check_null($data['mobile']  	,   '联系电话');
 
 
-	$sql = "UPDATE school SET "
-			. "name = '{$name}', "
-			. "mobile = '{$mobile}' "
-			. "WHERE userid = '{$userid}'";
-	$db->query($sql);
-
+	$sql = "SELECT * FROM school WHERE admin_user_name = '{$data['admin_user_name']}' and is_delete=0";
+	$school = $db->get_row($sql);
+	if($school['id'] != $id){
+		alert_back('系统已存在该账号！');
+	}
+	$db->update('school',$data,"id=$id");
 	$aid  = $_SESSION['admin_id'];
-	$text = '修改用户，修改用户ID：' . $userid;
+	$text = '修改幼教机构，修改幼教机构ID：' . $id;
 	operate_log($aid, 'school', 2, $text);
-
 	$now_page = irequest('now_page');
 	$url_to = "school.php?action=list&page={$now_page}";
 	url_locate($url_to, '修改成功');
@@ -197,19 +198,13 @@ function do_mod_school()
 function del_school()
 {
 	global $db;
-
-	$userid = irequest('userid');
-	/*$sql = "DELETE FROM school WHERE userid = '{$userid}'";
-	$db->query($sql);*/
-
+	$id = irequest('id');
 	$update_col = "is_delete = '1'";
-	$sql = "UPDATE school SET {$update_col} WHERE userid = '{$userid}'";
+	$sql = "UPDATE school SET {$update_col} WHERE id = '{$id}'";
 	$db->query($sql);
-
 	$aid  = $_SESSION['admin_id'];
-	$text = '删除用户，删除用户ID：' . $userid;
+	$text = '删除幼教机构，删除幼教机构ID：' . $id;
 	operate_log($aid, 'school', 3, $text);
-
 	$now_page = irequest('now_page');
 	$url_to = "school.php?action=list&page={$now_page}";
 	href_locate($url_to);
@@ -221,25 +216,18 @@ function del_school()
 function del_sel_school()
 {
 	global $db;
-
-	$userid = crequest('checkboxes');
-	if (empty($userid))alert_back('请选中需要删除的选项');
-
-	/*$sql = "DELETE FROM school WHERE userid IN ({$userid})";
-	$db->query($sql);*/
-
-	$sql = "SELECT * FROM school WHERE userid IN ({$userid})";
+	$id = crequest('checkboxes');
+	if (empty($id))alert_back('请选中需要删除的选项');
+	$sql = "SELECT * FROM school WHERE id IN ({$id}) and is_delete =0";
 	$school_all = $db->get_all($sql);
 	$update_col = "is_delete = '1'";
 	foreach($school_all as $key=>$val){
-		$sql = "UPDATE school SET {$update_col} WHERE userid = '{$val['userid']}'";
+		$sql = "UPDATE school SET {$update_col} WHERE id = '{$val['id']}'";
 		$db->query($sql);
 	}
-
 	$aid  = $_SESSION['admin_id'];
-	$text = '批量删除会员，批量删除会员ID：' . $userid;
+	$text = '批量删除会员，批量删除会员ID：' . $id;
 	operate_log($aid, 'school', 4, $text);
-
 	$now_page = irequest('now_page');
 	$url_to = "school.php?action=list&page={$now_page}";
 	href_locate($url_to);
