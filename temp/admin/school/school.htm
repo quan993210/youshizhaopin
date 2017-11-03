@@ -42,7 +42,7 @@
             <tr>
                 <td class="label">机构LOGO：</td>
                 <td>
-                    <img src="{if $school.logo neq ''}{$url_path}{$school.logo}{else}/images/default_news.jpg{/if}" id="upload_pic" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
+                    <img src="{if $school.logo neq ''}{$url_path}{$school.logo}{else}{$url_path}/images/default_news.jpg{/if}" id="upload_pic" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
                     <input type="hidden" value="{$school.logo}" name="info[logo]" id="pic_path" />
                     <input type="button" id="pickfiles" style="background:#fff;width:76px;height:24px;border:0;cursor:pointer;border:1px solid #CCC;margin:5px 0;margin-bottom:10px;" value="上传图片" />
                     <!-- <div style="color:#ff0000">图片大小为200px*150px</div>-->
@@ -112,30 +112,30 @@
             <tr>
                 <td class="label">产品图片：</td>
                 <td>
-                    <img src="{if $school.albums.0 neq ''}{$url_path}{$school.albums.0}{else}/images/default_news.jpg{/if}" id="upload_image1" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
+                    <img src="{if $school.albums.0 neq ''}{$url_path}{$school.albums.0}{else}{$url_path}/images/default_news.jpg{/if}" id="upload_image1" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
                     <input type="hidden" value="{$school.albums.0}" name="image1" id="image1" />
                     <input type="button" id="pic_image1" style="background:#fff;width:76px;height:24px;border:0;cursor:pointer;border:1px solid #CCC;margin:5px 0;margin-bottom:10px;" value="上传图片" />
                 </td>
                 <td>
-                    <img src="{if $school.albums.1 neq ''}{$url_path}{$school.albums.1}{else}/images/default_news.jpg{/if}" id="upload_image2" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
+                    <img src="{if $school.albums.1 neq ''}{$url_path}{$school.albums.1}{else}{$url_path}/images/default_news.jpg{/if}" id="upload_image2" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
                     <input type="hidden" value="{$school.albums.1}" name="image2" id="image2" />
                     <input type="button" id="pic_image2" style="background:#fff;width:76px;height:24px;border:0;cursor:pointer;border:1px solid #CCC;margin:5px 0;margin-bottom:10px;" value="上传图片" />
 
                 </td>
                 <td>
-                    <img src="{if $school.albums.2 neq ''}{$url_path}{$school.albums.2}{else}/images/default_news.jpg{/if}" id="upload_image3" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
+                    <img src="{if $school.albums.2 neq ''}{$url_path}{$school.albums.2}{else}{$url_path}/images/default_news.jpg{/if}" id="upload_image3" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
                     <input type="hidden" value="{$school.albums.2}" name="image3" id="image3" />
                     <input type="button" id="pic_image3" style="background:#fff;width:76px;height:24px;border:0;cursor:pointer;border:1px solid #CCC;margin:5px 0;margin-bottom:10px;" value="上传图片" />
 
                 </td>
                 <td>
-                    <img src="{if $school.albums.3 neq ''}{$url_path}{$school.albums.3}{else}/images/default_news.jpg{/if}" id="upload_image4" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
+                    <img src="{if $school.albums.3 neq ''}{$url_path}{$school.albums.3}{else}{$url_path}/images/default_news.jpg{/if}" id="upload_image4" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
                     <input type="hidden" value="{$school.albums.3}" name="image4" id="image4" />
                     <input type="button" id="pic_image4" style="background:#fff;width:76px;height:24px;border:0;cursor:pointer;border:1px solid #CCC;margin:5px 0;margin-bottom:10px;" value="上传图片" />
 
                 </td>
                 <td>
-                    <img src="{if $school.albums.4 neq ''}{$url_path}{$school.albums.4}{else}/images/default_news.jpg{/if}" id="upload_image5" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
+                    <img src="{if $school.albums.4 neq ''}{$url_path}{$school.albums.4}{else}{$url_path}/images/default_news.jpg{/if}" id="upload_image5" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
                     <input type="hidden" value="{$school.albums.4}" name="image5" id="image5" />
                     <input type="button" id="pic_image5" style="background:#fff;width:76px;height:24px;border:0;cursor:pointer;border:1px solid #CCC;margin:5px 0;margin-bottom:10px;" value="上传图片" />
                 </td>
@@ -143,25 +143,25 @@
             <tr>
                 <td></td>
                 <td>
-                    <img src="{if $school.albums.5 neq ''}{$url_path}{$school.albums.5}{else}/images/default_news.jpg{/if}" id="upload_image6" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
+                    <img src="{if $school.albums.5 neq ''}{$url_path}{$school.albums.5}{else}{$url_path}/images/default_news.jpg{/if}" id="upload_image6" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
                     <input type="hidden" value="{$school.albums.5}" name="image6" id="image6" />
                     <input type="button" id="pic_image6" style="background:#fff;width:76px;height:24px;border:0;cursor:pointer;border:1px solid #CCC;margin:5px 0;margin-bottom:10px;" value="上传图片" />
 
                 </td>
                 <td>
-                    <img src="{if $school.albums.6 neq ''}{$url_path}{$school.albums.6}{else}/images/default_news.jpg{/if}" id="upload_image7" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
+                    <img src="{if $school.albums.6 neq ''}{$url_path}{$school.albums.6}{else}{$url_path}/images/default_news.jpg{/if}" id="upload_image7" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
                     <input type="hidden" value="{$school.albums.6}" name="image7" id="image7" />
                     <input type="button" id="pic_image7" style="background:#fff;width:76px;height:24px;border:0;cursor:pointer;border:1px solid #CCC;margin:5px 0;margin-bottom:10px;" value="上传图片" />
 
                 </td>
                 <td>
-                    <img src="{if $school.albums.7 neq ''}{$url_path}{$school.albums.7}{else}/images/default_news.jpg{/if}" id="upload_image8" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
+                    <img src="{if $school.albums.7 neq ''}{$url_path}{$school.albums.7}{else}{$url_path}/images/default_news.jpg{/if}" id="upload_image8" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
                     <input type="hidden" value="{$school.albums.7}" name="image8" id="image8" />
                     <input type="button" id="pic_image8" style="background:#fff;width:76px;height:24px;border:0;cursor:pointer;border:1px solid #CCC;margin:5px 0;margin-bottom:10px;" value="上传图片" />
 
                 </td>
                 <td>
-                    <img src="{if $school.albums.8 neq ''}{$url_path}{$school.albums.8}{else}/images/default_news.jpg{/if}" id="upload_image9" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
+                    <img src="{if $school.albums.8 neq ''}{$url_path}{$school.albums.8}{else}{$url_path}/images/default_news.jpg{/if}" id="upload_image9" style="width:150px;height:100px;border: 1px solid #ccc;padding: 3px;border-radius: 5px;" /><br/>
                     <input type="hidden" value="{$school.albums.8}" name="image9" id="image9" />
                     <input type="button" id="pic_image9" style="background:#fff;width:76px;height:24px;border:0;cursor:pointer;border:1px solid #CCC;margin:5px 0;margin-bottom:10px;" value="上传图片" />
                 </td>
