@@ -234,5 +234,76 @@ function del_sel_school()
 }
 
 
+function import_school()
+{
+	global $db;
+	$exten = explode('.', $_FILES['school']['name']);
+	if($exten[1] !='xls' && $exten[1] !='xlsx'){
+		alert_back('请按模板导入EXCEL文件');
+	}
+
+	//接收前台文件，
+	$filename = $_FILES['school']['name'];
+	$tmp_name = $_FILES['school']['tmp_name'];
+	$data = uploadFile($filename, $tmp_name);
+	import_school_data($data);
+
+	$url_to = "dangfei.php?action=list";
+	url_locate($url_to, '添加成功');
+
+}
+
+//导入Excel文件
+function uploadFile($file,$filetempname){
+	//自己设置的上传文件存放路径
+	$filePath = ROOT_PATH.'/upload/excel/';
+	//下面的路径按照你PHPExcel的路径来修改
+
+	//注意设置时区
+	$time=date("y-m-d-H-i-s");//去当前上传的时间
+	//获取上传文件的扩展名
+	$extend=strrchr ($file,'.');
+	//上传后的文件名
+	$name=$time.$extend;
+	$uploadfile=$filePath.$name;//上传后的文件名地址
+	//move_uploaded_file() 函数将上传的文件移动到新位置。若成功，则返回 true，否则返回 false。
+	$result=move_uploaded_file($filetempname,$uploadfile);//假如上传到当前目录下
+	if($result) //如果上传文件成功，就执行导入excel操作
+	{
+		$type = 'Excel2007';//设置为Excel5代表支持2003或以下版本，Excel2007代表2007版
+		$xlsReader = PHPExcel_IOFactory::createReader($type);
+		$xlsReader->setReadDataOnly(true);
+		$xlsReader->setLoadSheetsOnly(true);
+		$Sheets = $xlsReader->load($uploadfile);
+		//开始读取上传到服务器中的Excel文件，返回一个二维数组
+		$dataArray = $Sheets->getSheet(0)->toArray();
+		return $dataArray;
+	}
+
+}
+
+function import_school_data($data){
+	global $db;
+	$one = $data[0];unset($data[0]);
+	foreach($data as $key=>$val){
+		$val[]['cityid'] = 1;
+		$val[]['city_name'] = "南昌";
+		$val[]['add_time'] = time();
+		$val[]['add_time_format'] = now_time();
+		$sql = "SELECT * FROM school WHERE admin_user_name = '{$val[0]}' and is_delete = 0";
+		$school = $db->get_row($sql);
+		if($school){
+			url_locate('school.php?action=list', '第'.$key.'行幼师机构已存在');
+		}
+		$row = $db->insert('school',$val);
+		if(!$row){
+			url_locate('school.php?action=list', '第'.$key.'行导入错误');
+		}
+	}
+	return true;
+
+}
+
+
 ?>
 
